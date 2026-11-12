@@ -99,9 +99,10 @@ class MainActivity : Activity() {
     }
 
     private fun pickCity() {
-        val names = ClockConfig.cities.map { it.first }.toTypedArray()
+        val list = ClockConfig.sortedCities
+        val names = list.map { ClockConfig.label(it) }.toTypedArray()
         AlertDialog.Builder(this).setTitle("Second city").setItems(names) { _, i ->
-            val (n, z) = ClockConfig.cities[i]
+            val (n, z) = list[i]
             ClockConfig.setCity(this, n, z)
             refresh()
         }.show()

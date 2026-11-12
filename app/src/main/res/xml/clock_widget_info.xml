@@ -10,4 +10,6 @@
     android:widgetCategory="home_screen"
     android:initialLayout="@layout/clock_widget"
     android:previewLayout="@layout/clock_widget"
+    android:configure="com.teovate.bigclock.WidgetConfigActivity"
+    android:widgetFeatures="reconfigurable"
     android:updatePeriodMillis="0" />

@@ -47,12 +47,42 @@ object ClockConfig {
         "Auckland" to "Pacific/Auckland",
         "Honolulu" to "Pacific/Honolulu",
         "UTC" to "UTC",
+        // Fillers so every whole-hour offset from UTC-12 to UTC+14 has at least one city
+        "Baker Island" to "Etc/GMT+12",
+        "Pago Pago" to "Pacific/Pago_Pago",
+        "Anchorage" to "America/Anchorage",
+        "Halifax" to "America/Halifax",
+        "Fernando de Noronha" to "America/Noronha",
+        "Azores" to "Atlantic/Azores",
+        "Reykjavik" to "Atlantic/Reykjavik",
+        "Karachi" to "Asia/Karachi",
+        "Dhaka" to "Asia/Dhaka",
+        "Vladivostok" to "Asia/Vladivostok",
+        "Noumea" to "Pacific/Noumea",
+        "Fiji" to "Pacific/Fiji",
+        "Tonga" to "Pacific/Tongatapu",
+        "Kiritimati" to "Pacific/Kiritimati",
     )
+
+    private fun offsetMin(zone: String): Int = TimeZone.getTimeZone(zone).getOffset(System.currentTimeMillis()) / 60000
+
+    /** Cities sorted west to east by their current UTC offset (DST-aware), then by name. */
+    val sortedCities: List<Pair<String, String>>
+        get() = cities.sortedWith(compareBy({ offsetMin(it.second) }, { it.first }))
+
+    /** e.g. "UTC+5:30  ·  Mumbai" */
+    fun label(city: Pair<String, String>): String {
+        val m = offsetMin(city.second)
+        val sign = if (m < 0) "-" else "+"
+        val a = Math.abs(m)
+        val off = if (a % 60 == 0) "${a / 60}" else "${a / 60}:%02d".format(a % 60)
+        return "UTC$sign$off  ·  ${city.first}"
+    }
 
     private fun prefs(c: Context) = c.getSharedPreferences("bigclock", Context.MODE_PRIVATE)
 
-    fun cityName(c: Context): String = prefs(c).getString("city_name", "San Francisco")!!
-    fun cityZone(c: Context): String = prefs(c).getString("city_zone", "America/Los_Angeles")!!
+    fun cityName(c: Context): String = prefs(c).getString("city_name", "Vancouver")!!
+    fun cityZone(c: Context): String = prefs(c).getString("city_zone", "America/Vancouver")!!
     fun size(c: Context): Int = prefs(c).getInt("size", DEFAULT_SIZE)
 
     fun setCity(c: Context, name: String, zone: String) {

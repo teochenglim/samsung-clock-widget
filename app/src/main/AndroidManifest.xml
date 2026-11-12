@@ -16,6 +16,15 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".WidgetConfigActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <!-- No alarms/permissions needed: TextClock ticks by itself with its own timezone. -->
         <receiver
             android:name=".ClockWidgetProvider"
